@@ -1,12 +1,13 @@
 <script lang="ts">
 export let title = "Label";
+export let colorState = "red";
 let colorRange = 0;
 const minRange = 0;
 const maxRange = 255;
 
 </script>
 <div class="flexbox">
-    <h2>{title}</h2>
+    <h2 class="{colorState}">{title}</h2>
     <input type="range" min={minRange} max={maxRange} bind:value={colorRange}>
     
     <p>{colorRange}</p>
@@ -32,5 +33,15 @@ input[type=range] {
 
 p {
     text-align: center;
+}
+
+.red {
+    color: red;
+}
+.green {
+    color: lightgreen;
+}
+.blue {
+    color: blue;
 }
 </style>

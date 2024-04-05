@@ -7,9 +7,9 @@ import ColorRange from "./lib/ColorRange.svelte";
 <Header />
 <div class="main">
     <div class="colorRanges">
-        <ColorRange />
-        <ColorRange />
-        <ColorRange />
+        <ColorRange title="Red" colorState="red"/>
+        <ColorRange title="Green" colorState="green"/>
+        <ColorRange title="Blue" colorState="blue"/>
     </div>
 </div>
 
