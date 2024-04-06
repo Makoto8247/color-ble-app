@@ -10,14 +10,26 @@ const maxRange = 255;
     <h2 class="{colorState}">{title}</h2>
     <input type="range" min={minRange} max={maxRange} bind:value={colorRange}>
     
-    <p>{colorRange}</p>
+    <p class="{colorState}">{colorRange}</p>
 </div>
 
-<style>
+<style lang="scss">
 .flexbox {
     display: flex;
     flex-direction: column;
     width: fit-content;
+
+    .red {
+        color: red;
+    }
+
+    .green {
+        color: lightgreen;
+    }
+
+    .blue {
+        color: blue;
+    }
 }
 h2 {
     font-size: 2em;
@@ -33,15 +45,5 @@ input[type=range] {
 
 p {
     text-align: center;
-}
-
-.red {
-    color: red;
-}
-.green {
-    color: lightgreen;
-}
-.blue {
-    color: blue;
 }
 </style>
