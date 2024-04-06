@@ -2,6 +2,10 @@
 import Header from "./lib/Header.svelte";
 import Footer from "./lib/Footer.svelte";
 import ColorRange from "./lib/ColorRange.svelte";
+import { BLEsetting } from "./scripts/BLEsetting";
+
+const bleSetting = new BLEsetting();
+
 </script>
 
 <Header />
