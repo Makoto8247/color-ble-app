@@ -1,9 +1,9 @@
 import { Device, type DeviceInfo } from "@capacitor/device";
-import { BleClient, numberToUUID, type BleDevice } from "@capacitor-community/bluetooth-le";
+import { BleClient, numbersToDataView, numberToUUID, type BleDevice } from "@capacitor-community/bluetooth-le";
 import { get, writable, type Writable} from "svelte/store";
 
 const COLOR_BLE_SERVICE = numberToUUID(0xabcd);
-const COLOR_BLE_CHARACTERISTIC = "00001234-1000-8000-00805f9b34fb";
+const COLOR_BLE_CHARACTERISTIC = numberToUUID(0x1234);
 
 export class BLEsetting {
     private devInfo: DeviceInfo | undefined;
@@ -24,14 +24,36 @@ export class BLEsetting {
         if (get(this.statusFlg) === 1){
             await BleClient.connect(
                 this.device!.deviceId,
-                (deviceId) => this.onDisconnect(deviceId)
+                () => this.onDisconnect()
             );
             this.statusFlg.set(2);
         }
     }
 
-    public onDisconnect(deviceId: string) {
+    public async onDisconnect() {
+        if(get(this.statusFlg) === 2){
+            await BleClient.disconnect(this.device!.deviceId);
+        }
         this.statusFlg.set(1);
+    }
+
+    public async onWriteColorCode(red: number, green: number, blue: number) {
+        if(get(this.statusFlg) === 2) {
+            try{
+                this.statusFlg.set(3);
+                await BleClient.write(
+                    this.device!.deviceId,
+                    COLOR_BLE_SERVICE,
+                    COLOR_BLE_CHARACTERISTIC,
+                    numbersToDataView([red, green, blue])
+                );
+                this.statusFlg.set(2);
+                await this.sleep(1000);
+            }catch{
+                this.statusFlg.set(2);
+                await this.onDisconnect();
+            }
+        }
     }
 
     private async logDeviceInfo() {
@@ -48,6 +70,10 @@ export class BLEsetting {
         this.device = await BleClient.requestDevice({
             services: [COLOR_BLE_SERVICE],
         });
+    }
+
+    private sleep(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 export let title = "Label";
 export let colorState = "red";
-let colorRange = 0;
+export let colorRange = 0;
 const minRange = 0;
 const maxRange = 255;
 
