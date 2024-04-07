@@ -1,5 +1,6 @@
 import { Device, type DeviceInfo } from "@capacitor/device";
 import { BleClient, numberToUUID, type BleDevice } from "@capacitor-community/bluetooth-le";
+import { get, writable, type Writable} from "svelte/store";
 
 const COLOR_BLE_SERVICE = numberToUUID(0xabcd);
 const COLOR_BLE_CHARACTERISTIC = "00001234-1000-8000-00805f9b34fb";
@@ -7,30 +8,30 @@ const COLOR_BLE_CHARACTERISTIC = "00001234-1000-8000-00805f9b34fb";
 export class BLEsetting {
     private devInfo: DeviceInfo | undefined;
     private device: BleDevice | undefined;
-    public  statusFlg: number;
+    public  statusFlg: Writable<number>;
 
     constructor() {
-        this.statusFlg = 0;
+        this.statusFlg = writable(0);
     }
 
     public async init() {
         await this.logDeviceInfo();
         await this.bleInitialize(this.devInfo?.platform);
-        this.statusFlg = 1;
+        this.statusFlg.set(1);
     }
 
     public async onConnect() {
-        if (this.statusFlg === 1){
+        if (get(this.statusFlg) === 1){
             await BleClient.connect(
                 this.device!.deviceId,
                 (deviceId) => this.onDisconnect(deviceId)
             );
-            this.statusFlg = 2;
+            this.statusFlg.set(2);
         }
     }
 
     public onDisconnect(deviceId: string) {
-        this.statusFlg = 1;
+        this.statusFlg.set(1);
     }
 
     private async logDeviceInfo() {

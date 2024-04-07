@@ -5,24 +5,41 @@ import ColorRange from "./lib/ColorRange.svelte";
 import { BLEsetting } from "./scripts/BLEsetting";
 
 const bleSetting = new BLEsetting();
-const bleInit = bleSetting.init();
+let bleInit = bleSetting.init();
+let bleConnect = bleSetting.onConnect();
 
-$:bleStatus = bleSetting.statusFlg;
+let bleFlg = 0;
+bleSetting.statusFlg.subscribe(flug => {
+    bleFlg = flug;
+});
+
+function tryBleInit() {
+    bleInit = bleSetting.init()
+}
+
+function tryBleConnect() {
+    bleConnect = bleSetting.onConnect();
+}
 
 </script>
 
 <Header />
 <div class="main">
     {#await bleInit}
-        <p>Loading</p>
+        <p>Loading...</p>
     {:then}
-        <p>{bleStatus}</p>
-        {#if bleStatus === 1}
-            <button on:click={bleSetting.onConnect}>connect</button>
+        {#if bleFlg === 1}
+            <p>Complete initial BLE configuration.</p>
+            <button on:click={tryBleConnect}>Connect</button>
+        {:else if bleFlg === 2}
+            <p>Connected</p>
         {/if}
     {:catch error}
         <p>{error.message}</p>
     {/await}
+    {#if bleFlg === 0}
+        <button on:click={tryBleInit}>Init Start.</button>
+    {/if}
     <div class="colorRanges">
         <ColorRange title="Red" colorState="red"/>
         <ColorRange title="Green" colorState="green"/>
