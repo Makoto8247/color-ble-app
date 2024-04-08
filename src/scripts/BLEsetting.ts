@@ -48,7 +48,6 @@ export class BLEsetting {
                     numbersToDataView([red, green, blue])
                 );
                 this.statusFlg.set(2);
-                await this.sleep(1000);
             }catch{
                 this.statusFlg.set(2);
                 await this.onDisconnect();
@@ -72,7 +71,7 @@ export class BLEsetting {
         });
     }
 
-    private sleep(ms: number) {
+    public sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 }

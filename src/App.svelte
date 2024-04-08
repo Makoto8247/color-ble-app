@@ -8,11 +8,12 @@ const bleSetting = new BLEsetting();
 let bleInit = bleSetting.init();
 let bleConnect = bleSetting.onConnect();
 let bleDisconnect = bleSetting.onDisconnect();
-let bleWrite = bleSetting.onWriteColorCode(0, 0, 0);
 
-$:setRed = 0;
-$:setGreen = 0;
-$:setBlue = 0;
+let setRed = 0;
+let setGreen = 0;
+let setBlue = 0;
+
+$:bleSetting.sleep(150).then(() => bleSetting.onWriteColorCode(setRed, setGreen, setBlue).then());
 
 let bleFlg = 0;
 bleSetting.statusFlg.subscribe(flug => {
@@ -32,9 +33,6 @@ function tryBleDisconnect() {
     bleDisconnect = bleSetting.onDisconnect();
 }
 
-function tryBleWrite() {
-    bleWrite = bleSetting.onWriteColorCode(setRed, setGreen, setBlue);
-}
 </script>
 
 <Header />
@@ -51,6 +49,7 @@ function tryBleWrite() {
             <button on:click={tryBleDisconnect}>Disconnect</button>
         {:else if bleFlg === 3}
             <p>Writing Now</p>
+            <button on:click={tryBleDisconnect}>Disconnect</button>
         {/if}
     {:catch error}
         <p>{error.message}</p>
@@ -63,12 +62,11 @@ function tryBleWrite() {
         <ColorRange title="Green" colorState="green" bind:colorRange={setGreen} />
         <ColorRange title="Blue" colorState="blue" bind:colorRange={setBlue} />
     </div>
-    {#if bleFlg === 2}
-        <button on:click={tryBleWrite}>Writing</button>
-    {/if}
 </div>
 
 <Footer />
+
+
 <style>
 .main {
     display: flex;
