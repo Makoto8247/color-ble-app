@@ -43,13 +43,13 @@ function tryBleDisconnect() {
     {:then}
         {#if bleFlg === 1}
             <p>Waiting for connection.</p>
-            <button on:click={tryBleConnect}>Connect</button>
+            <button on:click={tryBleConnect} class="connect-button">Connect</button>
         {:else if bleFlg === 2}
             <p>Connected</p>
-            <button on:click={tryBleDisconnect}>Disconnect</button>
+            <button on:click={tryBleDisconnect} class="disconnect-button">Disconnect</button>
         {:else if bleFlg === 3}
             <p>Writing Now</p>
-            <button on:click={tryBleDisconnect}>Disconnect</button>
+            <button on:click={tryBleDisconnect} class="disconnect-button">Disconnect</button>
         {/if}
     {:catch error}
         <p>{error.message}</p>
@@ -78,6 +78,34 @@ function tryBleDisconnect() {
 .colorRanges {
     display: flex;
     flex-direction: row;
+}
+
+button {
+    display: inline-block;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    box-shadow: -3px 9px #999;
+}
+
+button:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+.connect-button {
+    background-color: #4CAF50;
+}
+
+.disconnect-button {
+    background-color: #f44336;
 }
 
 </style>
